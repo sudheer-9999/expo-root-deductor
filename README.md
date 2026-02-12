@@ -24,7 +24,7 @@ For bare React Native projects, you must ensure that you have [installed and con
 #### Add the package to your npm dependencies
 
 ```bash
-npm install expo-root-deductor
+npm install @bandaru.sudheer.npm/expo-root-deductor
 ```
 
 #### Configure for Android
