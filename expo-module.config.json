@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["ExpoRootDeductorModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.rootdeductor.ExpoRootDeductorModule"]
+  }
+}
