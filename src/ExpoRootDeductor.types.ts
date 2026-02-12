@@ -12,6 +12,17 @@ export type ChangeEventPayload = {
   value: string;
 };
 
+export type DetectionResult = {
+  isCompromised: boolean;
+  failedChecks: string[];
+  details: {
+    isRooted: boolean;
+    isDeveloperMode: boolean;
+    isDeveloperOptionsEnabled: boolean;
+    isEmulator: boolean;
+  };
+};
+
 export type ExpoRootDeductorViewProps = {
   url: string;
   onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;

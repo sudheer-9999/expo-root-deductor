@@ -1,6 +1,6 @@
 import { registerWebModule, NativeModule } from 'expo';
 
-import { ExpoRootDeductorModuleEvents } from './ExpoRootDeductor.types';
+import { ExpoRootDeductorModuleEvents, DetectionResult } from './ExpoRootDeductor.types';
 
 class ExpoRootDeductorModule extends NativeModule<ExpoRootDeductorModuleEvents> {
   PI = Math.PI;
@@ -9,6 +9,19 @@ class ExpoRootDeductorModule extends NativeModule<ExpoRootDeductorModuleEvents> 
   }
   hello() {
     return 'Hello world! 👋';
+  }
+  async checkDeviceSecurity(): Promise<DetectionResult> {
+    // Web platform doesn't have access to device security features
+    return {
+      isCompromised: false,
+      failedChecks: [],
+      details: {
+        isRooted: false,
+        isDeveloperMode: false,
+        isDeveloperOptionsEnabled: false,
+        isEmulator: false,
+      },
+    };
   }
 }
 
