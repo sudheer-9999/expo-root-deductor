@@ -1,10 +1,10 @@
 # expo-root-deductor
 
-A comprehensive Expo module for detecting device security compromises including root/jailbreak detection, developer mode checks, and emulator detection on iOS and Android platforms.
+A comprehensive Expo module for detecting device security compromises including root detection, developer mode checks, and emulator detection on Android platform.
 
 ## Features
 
-- 🔒 **Root/Jailbreak Detection**: Detects if the device is rooted (Android) or jailbroken (iOS)
+- 🔒 **Root Detection**: Detects if the device is rooted (Android)
 - 🛠️ **Developer Mode Detection**: Checks if developer mode is enabled
 - ⚙️ **Developer Options Detection**: Detects if developer options are enabled
 - 📱 **Emulator Detection**: Identifies if the app is running on an emulator or simulator
@@ -30,15 +30,6 @@ npm install @bandaru.sudheer.npm/expo-root-deductor
 #### Configure for Android
 
 No additional configuration needed. The module will automatically detect root status and developer options.
-
-#### Configure for iOS
-
-Run `npx pod-install` after installing the npm package.
-
-```bash
-cd ios
-npx pod-install
-```
 
 ## Usage
 
@@ -139,7 +130,7 @@ type DetectionResult = {
   isCompromised: boolean;           // True if any security check failed
   failedChecks: string[];            // Array of failed check names
   details: {
-    isRooted: boolean;               // True if device is rooted/jailbroken
+    isRooted: boolean;               // True if device is rooted
     isDeveloperMode: boolean;        // True if developer mode is enabled
     isDeveloperOptionsEnabled: boolean; // True if developer options are enabled
     isEmulator: boolean;              // True if running on emulator/simulator
@@ -247,7 +238,6 @@ import { ExpoRootDeductorView } from 'expo-root-deductor';
 
 ## Platform Support
 
-- ✅ iOS
 - ✅ Android
 - ✅ Web (with appropriate fallbacks)
 
@@ -257,7 +247,7 @@ import { ExpoRootDeductorView } from 'expo-root-deductor';
 
 ### Limitations
 
-- Root/jailbreak detection can be bypassed by sophisticated root cloaking tools
+- Root detection can be bypassed by sophisticated root cloaking tools
 - Some checks may have false positives or false negatives
 - Web platform has limited detection capabilities
 
