@@ -27,7 +27,7 @@ public class ExpoRootDeductorModule: Module {
         let result = try self.performSecurityChecks()
         promise.resolve(result)
       } catch {
-        promise.reject("SECURITY_CHECK_ERROR", "Error performing security checks: \(error.localizedDescription)", error)
+          promise.reject(error)
       }
     }
 
@@ -215,6 +215,10 @@ public class ExpoRootDeductorModule: Module {
 
   private func getLoadedLibraries() -> [String]? {
     var libraries: [String] = []
+    
+    // Use dyld functions for library detection (private API, but commonly used for security checks)
+    // Note: These are private APIs and may cause issues in some build configurations
+    #if !targetEnvironment(simulator)
     let count = _dyld_image_count()
     
     for i in 0..<count {
@@ -223,6 +227,7 @@ public class ExpoRootDeductorModule: Module {
         libraries.append(name)
       }
     }
+    #endif
     
     return libraries.isEmpty ? nil : libraries
   }
