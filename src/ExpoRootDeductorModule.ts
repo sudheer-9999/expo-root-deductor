@@ -1,13 +1,29 @@
 import { NativeModule, requireNativeModule } from 'expo';
+import { Platform } from 'react-native';
 
-import { ExpoRootDeductorModuleEvents, DetectionResult } from './ExpoRootDeductor.types';
+import { DetectionResult } from './ExpoRootDeductor.types';
 
-declare class ExpoRootDeductorModule extends NativeModule<ExpoRootDeductorModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
+declare class ExpoRootDeductorModule extends NativeModule {
   checkDeviceSecurity(): Promise<DetectionResult>;
 }
 
-// This call loads the native module object from the JSI.
-export default requireNativeModule<ExpoRootDeductorModule>('ExpoRootDeductor');
+const NoopModule = {
+  async checkDeviceSecurity(): Promise<DetectionResult> {
+    return {
+      isCompromised: false,
+      failedChecks: [],
+      details: {
+        isRooted: false,
+        isDeveloperMode: false,
+        isDeveloperOptionsEnabled: false,
+        isEmulator: false,
+      },
+    };
+  },
+} as unknown as ExpoRootDeductorModule;
+
+// Only load the native module on Android where it's available.
+// On iOS/web, return a no-op stub to avoid crashing from requireNativeModule.
+export default Platform.OS === 'android'
+  ? requireNativeModule<ExpoRootDeductorModule>('ExpoRootDeductor')
+  : NoopModule;

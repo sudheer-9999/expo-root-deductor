@@ -3,7 +3,6 @@ package expo.modules.rootdeductor
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.Promise
-import java.net.URL
 import java.io.File
 import android.os.Build
 import android.provider.Settings
@@ -11,22 +10,6 @@ import android.provider.Settings
 class ExpoRootDeductorModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoRootDeductor")
-
-    Constant("PI") {
-      Math.PI
-    }
-
-    Events("onChange")
-
-    Function("hello") {
-      "Hello world! 👋"
-    }
-
-    AsyncFunction("setValueAsync") { value: String ->
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
-    }
 
     AsyncFunction("checkDeviceSecurity") { promise: Promise ->
       try {
@@ -36,37 +19,26 @@ class ExpoRootDeductorModule : Module() {
         promise.reject("SECURITY_CHECK_ERROR", "Error performing security checks: ${e.message}", e)
       }
     }
-
-    View(ExpoRootDeductorView::class) {
-      Prop("url") { view: ExpoRootDeductorView, url: URL ->
-        view.webView.loadUrl(url.toString())
-      }
-      Events("onLoad")
-    }
   }
 
   private fun performSecurityChecks(): Map<String, Any> {
     val failedChecks = mutableListOf<String>()
     
-    // Check for root
     val isRooted = checkRoot()
     if (isRooted) {
       failedChecks.add("ROOT_DETECTED")
     }
     
-    // Check for developer mode
     val isDeveloperMode = checkDeveloperMode()
     if (isDeveloperMode) {
       failedChecks.add("DEVELOPER_MODE_ENABLED")
     }
     
-    // Check for developer options
     val isDeveloperOptionsEnabled = checkDeveloperOptions()
     if (isDeveloperOptionsEnabled) {
       failedChecks.add("DEVELOPER_OPTIONS_ENABLED")
     }
     
-    // Check for emulator
     val isEmulator = checkEmulator()
     if (isEmulator) {
       failedChecks.add("EMULATOR_DETECTED")
@@ -127,13 +99,11 @@ class ExpoRootDeductorModule : Module() {
       "/data/data/com.formyhm.hiderootPremium",
       "/data/data/com.formyhm.hideroot",
       "/data/data/me.phh.superuser",
-      "/data/data/eu.chainfire.supersu",
       "/data/data/com.koushikdutta.superuser",
       "/data/data/com.kingouser.com",
       "/data/data/com.topjohnwu.magisk"
     )
 
-    // Check for root binaries
     for (path in rootIndicators) {
       if (File(path).exists()) {
         return true
@@ -187,21 +157,11 @@ class ExpoRootDeductorModule : Module() {
 
   private fun checkEmulator(): Boolean {
     return try {
-      // Check build fingerprint
       val fingerprint = Build.FINGERPRINT
       if (fingerprint != null) {
         val emulatorKeywords = listOf(
-          "generic",
-          "unknown",
-          "emulator",
-          "simulator",
-          "sdk",
-          "vbox",
-          "genymotion",
-          "x86",
-          "goldfish",
-          "ranchu",
-          "test-keys"
+          "generic", "unknown", "emulator", "simulator",
+          "sdk", "vbox", "genymotion", "x86", "goldfish", "ranchu", "test-keys"
         )
         val lowerFingerprint = fingerprint.lowercase()
         if (emulatorKeywords.any { lowerFingerprint.contains(it) }) {
@@ -209,68 +169,43 @@ class ExpoRootDeductorModule : Module() {
         }
       }
 
-      // Check hardware
       val hardware = Build.HARDWARE
       if (hardware != null) {
-        val emulatorHardware = listOf(
-          "goldfish",
-          "ranchu",
-          "vbox86"
-        )
+        val emulatorHardware = listOf("goldfish", "ranchu", "vbox86")
         if (emulatorHardware.any { hardware.lowercase().contains(it) }) {
           return true
         }
       }
 
-      // Check product
       val product = Build.PRODUCT
       if (product != null) {
         val emulatorProducts = listOf(
-          "sdk",
-          "google_sdk",
-          "emulator",
-          "simulator",
-          "vbox86p",
-          "genymotion",
-          "Genymotion",
-          "generic",
-          "generic_x86",
-          "generic_x86_64"
+          "sdk", "google_sdk", "emulator", "simulator",
+          "vbox86p", "genymotion", "generic", "generic_x86", "generic_x86_64"
         )
         if (emulatorProducts.any { product.lowercase().contains(it.lowercase()) }) {
           return true
         }
       }
 
-      // Check manufacturer
       val manufacturer = Build.MANUFACTURER
       if (manufacturer != null) {
-        val emulatorManufacturers = listOf(
-          "genymotion",
-          "Genymotion",
-          "unknown"
-        )
+        val emulatorManufacturers = listOf("genymotion", "unknown")
         if (emulatorManufacturers.any { manufacturer.lowercase().contains(it.lowercase()) }) {
           return true
         }
       }
 
-      // Check model
       val model = Build.MODEL
       if (model != null) {
         val emulatorModels = listOf(
-          "sdk",
-          "google_sdk",
-          "emulator",
-          "simulator",
-          "Android SDK built for x86"
+          "sdk", "google_sdk", "emulator", "simulator", "Android SDK built for x86"
         )
         if (emulatorModels.any { model.lowercase().contains(it.lowercase()) }) {
           return true
         }
       }
 
-      // Check brand
       val brand = Build.BRAND
       if (brand != null && Build.DEVICE != null) {
         if (brand.lowercase().startsWith("generic") && Build.DEVICE.lowercase().startsWith("generic")) {

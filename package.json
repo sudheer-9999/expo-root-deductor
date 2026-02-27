@@ -1,7 +1,7 @@
 {
   "name": "@bandaru.sudheer.npm/expo-root-deductor",
-  "version": "0.2.0",
-  "description": "My new module",
+  "version": "0.2.1",
+  "description": "Expo module for device security checks (root/jailbreak, emulator, developer mode detection)",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
